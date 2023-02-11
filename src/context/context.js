@@ -14,7 +14,12 @@ import { Firestore } from 'firebase/firestore';
  export const UserContext = createContext();
  const Context = ({children}) => {
     const [lastname,setLastName] = useState(null)
-    // const [password,setPassword] = useState(null)
+    const [progress,setprogress] = useState(null)
+    const [paymentMethod,setpaymentProcessor] = useState(null)
+    const [active,setactive] = useState(null)
+
+
+    const [region,setregion] = useState(null)
     const [confirmPassword,setConfirmPassword] = useState(null)
     const [email,setEmail] = useState(null)
     const [phoneNumber,setPhoneNumber] = useState(null)
@@ -22,13 +27,19 @@ import { Firestore } from 'firebase/firestore';
     const [firstName,setFirstName] = useState(null)
     const [users,setuser] = useState(null)
     const [birthDate,setBirthDate] = useState(null)
-    const [cred,setcred] = useState(null)
+    const [plan,setplan] = useState(null)
     const [storageError,setStorageError] = useState(null)
-    const [authtext,setAuthText] = useState(null)
+    const [paymentInfo,setpaymentInfo] = useState(null)
+    const [authtext,setAuthText] = useState([])
     const [authError,setAuthError] = useState(null)
+    const [paid,setpaid] = useState(null)
+    const [companyname,setcompanyname] = useState(null)
+    const [Companyemail,setCompanyemail] = useState(null)
+
+
+
     const [messageSent,setmessageSent] = useState([])
   const [chats, setChats] = useState([]);
-console.log("ssss" +chats)
 
     const [uid,setUid] = useState(null)
     const [photo, setPhoto] = useState(null)
@@ -72,46 +83,8 @@ console.log("ssss" +chats)
   
 
 
-   const createIndividualUser = (email, password,firstName,reff,downloadImg ,lastname,birthDate,phoneNumber,governmentId,storageRef,gender,img,jobTitle,EmploymentField,recentcompany,region) => {
-    createUserWithEmailAndPassword(auth, email, password)
-    .then((credentials=>{
-          
-      listAll(storageRef).then((response)=>{
-        response.items.forEach(item=>{
-          getDownloadURL(item).then(url=>{
-  
-                
-           setDoc(doc(firestore, "Individual", "credentials.user.uid"), {
-            
-               
-  
-            firstName:firstName,
-            // lastname:lastname,
-            email:email,
-            birthDate:birthDate,
-            phoneNumber:phoneNumber,
-          governmentId:url,
-           gender:gender,
-           // FieldOfStudy:jobStudy,
-           // jobTitle:jobTitle,
-           // EmploymentField:EmploymentField,
-           // recentcompany:recentcompany,
-           region:region,
-           birthDate:birthDate,
-           uid:credentials.user.uid
-           
-            
-     }).then(console.log("img added").catch(e=>(console.log(e.message))))
-  
-  
-            
-          })
-        })
-       })
-      
-   })
-  )
-  };
+  //  const createIndividualUser = (email, password,firstName,uploadImage,reff,downloadImg,plan ,lastname,birthDate,phoneNumber,governmentId,storageRef,gender,img,jobTitle,EmploymentField,recentcompany,region) => {
+
 
 
 
@@ -123,26 +96,7 @@ const auth = getAuth();
 const user = auth.currentUser;
 
 const createCompany = (Companyemail,  companyPassword,Companystatus,storageRef) => {
-  createUserWithEmailAndPassword(auth, Companyemail,  companyPassword)
-  .then((credentials=>{
-    
 
-       
-
-         setDoc(doc(firestore, "Company", credentials.user.uid), {
-          Companystatus:Companystatus,
-          Companyemail: Companyemail,
-          birthDate:birthDate,
-         
-         uid:credentials.user.uid
-        }).then(console.log("img added").catch(e=>(console.log(e.message))))
-    
-
-    
-
-    
- })
-)
 };
 
 
@@ -191,6 +145,18 @@ const createUser = (email, password,firstName,lastname,birthDate,profilePhoto, u
 
 
 };
+// useEffect(() => {
+//   const getChats = () => {
+   
+
+//     return () => {
+//       unsub();
+//     };
+//   };
+
+//   users.uid && getChats();
+// }, [users.uid]);
+
 
  const signIn = (email, password) =>  {
   return signInWithEmailAndPassword(auth, email, password)
@@ -210,43 +176,40 @@ useEffect(() => {
     //  setcred(uid)
     console.log(uid)
       setuser(user);
-      onSnapshot(collection(activityRef,uid, 'UserDetails'),(snapshot)=>{
+      onSnapshot(doc(db, "TotalUsers", uid),(snapshot)=>{
         let recent = []
-        snapshot.forEach(item=>{
-            recent.push({...item.data()})
-            setFirstName(item.data())
+        // snapshot.forEach(item=>{
+            recent.push({...snapshot.data()})
+       
             recent.map(details=>{
-             const {firstName,lastname,phoneNumber,profilePhoto,email} = details
+             const {firstName,lastname,phoneNumber,governmentId,CompanyName,Companyemail,email,paid,plan,region,birthDate,PaymentMethod,active,processorInfo} = details
              setFirstName(firstName)
              setLastName(lastname)
              setPhoneNumber(phoneNumber)
-            setPhoto(profilePhoto)
+            setPhoto(governmentId)
              setEmail(email)
-            })
-            onSnapshot(collection(ref, cred, 'landmarks'), snapshot=>{
+             setregion(region)
+             setBirthDate(birthDate)
+             setpaymentProcessor(PaymentMethod)
+             setpaymentInfo(processorInfo)
+             setpaid(paid)
+             setactive(active)
+             setplan(plan)
+             setcompanyname(CompanyName)
+             setCompanyemail(Companyemail)
 
-              let message = []
-              snapshot.docs.forEach(doc=>{
-                  message.push({...doc.data()})
-                  setmessageSent(message)
-                  messageSent.map(item=>{
-                   const {     employersEmail
-                   } = item
-       
-                   console.log(employersEmail)
-                  })
              
-              })
-              
-          })
+            // })
+      
 
         })
  
 
   });
-  onSnapshot(doc(db, "userChats", user.uid), (doc) => {
-    setChats(doc.data());
-  })
+
+      
+
+     
       
       // ...
     } else {
@@ -254,13 +217,14 @@ useEffect(() => {
       
     }
   });
+
   
     
 
   return () => {
     unsubscribe();
   };
-}, []);
+}, [users]);
 
 useEffect(() => {
   (async()=>{
@@ -283,7 +247,7 @@ const logOut = ()=>{
    
   
  return(
-    <UserContext.Provider value={{createUser,users,data:state,chats, dispatch,createIndividualUser,uid,photo,firstName,lastname,email,signIn,createCompany,logOut,phoneNumber,birthDate}}>
+    <UserContext.Provider value={{createUser,users,paymentMethod,companyname,Companyemail,plan,active,paid,paymentInfo,chats,authtext,authtext, dispatch,region,birthDate,uid,photo,firstName,lastname,email,signIn,createCompany,logOut,phoneNumber,birthDate}}>
     {children}
   </UserContext.Provider>
  )

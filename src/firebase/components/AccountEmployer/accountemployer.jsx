@@ -1,5 +1,5 @@
 import { async } from '@firebase/util';
-import { getDoc, getFirestore,doc, getDocs, onSnapshot, collection,deleteDoc ,query,where} from 'firebase/firestore';
+import { getDoc, getFirestore,doc, getDocs, onSnapshot, collection,deleteDoc ,query,where, orderBy} from 'firebase/firestore';
 import React,{useEffect} from 'react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -22,11 +22,13 @@ const Accountemployer = () => {
     
     const [docu,setDoc] = useState([])
     const [activity,setActivity] = useState([])
+    const [nullUser,setnullUser] = useState("")
+
     const [selectedRecent,setselectedRecent] = useState("")
 
     const db = getFirestore()
     
-    const {firstName, logOut,users,lastname,photo} = UseAuth()
+    const {firstName, logOut,users,lastname,photo,Companyemail,companyname} = UseAuth()
     const firestore = getFirestore(app)
     const auth = getAuth()
     const navigate = useNavigate()
@@ -37,7 +39,32 @@ const Accountemployer = () => {
   
     // const q = query(collection(db, "activityRecent"), where(1));
 
+ if (activity.length == 0){
+    const nulluser =    (  <div class="lg:px-24 lg:py-24 md:py-30 md:px-44 px-4 py-24 items-center flex justify-center flex-col-reverse lg:flex-row md:gap-28 gap-106">
+    <div class="xl:pt-24 w-full xl:w-1/2 relative pb-12 lg:pb-0">
+        <div class="relative">
+            <div class="absolute">
+                <div class="">
+                    <h1 class="my-2 text-gray-800 font-bold text-2xl">
+                        Looks like you've found the
+                        doorway to the great nothing
+                    </h1>
+                    <p class="my-2 text-gray-800">Sorry about that! Please visit our hompage to get where you need to go.</p>
+                    <button class="sm:w-full lg:w-auto my-2 border rounded md py-4 px-8 text-center bg-indigo-600 text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-700 focus:ring-opacity-50">Take me there!</button>
+                </div>
+            </div>
+          
+        </div>
+    </div>
  
+</div> )
+
+ }
+ else{
+    console.log("not fill")
+
+ }
+
 
     // useEffect(() => {
     //     (async()=>{
@@ -55,10 +82,57 @@ const Accountemployer = () => {
     //      ()
     //     }, [])
 
+    var sec, min, hour;
+var seconds = 1675549738
+if(seconds<3600){
+    var a = Math.floor(seconds/60); //minutes
+    var b = seconds%60; //seconds
+
+    if (b!=1){
+        sec = "seconds";
+    }else{
+        sec = "second";
+    }
+
+    if(a!=1){
+        min = "minutes";
+    }else{
+        min = "minute";
+    }
+
+    console.log(hour)
+}else{
+        var a = Math.floor(seconds/3600); //hours
+    var x = seconds%3600;
+    var b = Math.floor(x/60); //minutes
+    var c = seconds%60; //seconds
+
+     if (c!=1){
+        sec = "seconds";
+    }else{
+        sec = "second";
+    }
+
+    if(b!=1){
+        min = "minutes";
+    }else{
+        min = "minute";
+    }
+
+    if(c!=1){
+        hour = "hours";
+    }else{
+        hour = "hour";
+    }
+
+   console.log(hour)
+}
+   
+
     useEffect(() => {
         (async()=>{
- 
-         onSnapshot(collection(activityRef, users.uid, 'landmarks,'),(snapshot)=>{
+         onSnapshot(collection(activityRef, users.uid, 'postedJobs')
+         ,(snapshot)=>{
              let recent = []
              snapshot.forEach(item=>{
           
@@ -66,12 +140,21 @@ const Accountemployer = () => {
                  recent.push({...item.data(),id:item.id})
                  
                  setActivity(recent)
+                activity.map(item=>{
+                    const {timestamp} = item
+                    console.log(timestamp)
+                })
+        setnullUser(true)
+
              })
          })
         })
       ()
      }, []);
 
+
+    //  if(activity == null){
+    //  }
 
 
 
@@ -109,7 +192,7 @@ function handlecross(){
     main.style.width=(0),
     main.style.zIndex=(-100)
 
- )
+ ).then()
     // deleteDoc(collection(activityRef, selectedRecent, 'landmarks')) 
   }
 
@@ -175,7 +258,7 @@ function handlecross(){
  ">
  <div className="mt-8 text-center">
         <img src={photo} alt="" className="w-10 h-10 m-auto rounded-full object-cover lg:w-28 lg:h-28"/>
-        <h5 className="hidden mt-4 text-xl font-semibold text-gray-600 lg:block">{firstName} {lastname}</h5>
+        <h5 className="hidden mt-4 text-xl font-semibold text-gray-600 lg:block">{companyname}</h5>
         <span className="hidden text-gray-400 lg:block">Profile</span>
     </div></Link>
 
@@ -337,8 +420,29 @@ function handlecross(){
        Jobs you  Posted
                     </h1>
     <div class="min-w-screen min-h-screen bg-white flex  justify-center bg-white font-sans ">
+        
+
    
     <div class="w-full lg:w-5/6">
+        
+    {/* <div class="lg:px-24 lg:py-24 md:py-30 md:px-44 px-4 py-24 items-center flex justify-center flex-col-reverse lg:flex-row md:gap-28 gap-106">
+            <div class="xl:pt-24 w-full xl:w-1/2 relative pb-12 lg:pb-0">
+                <div class="relative">
+                    <div class="absolute">
+                        <div class="">
+                            <h1 class="my-2 text-gray-800 font-bold text-2xl">
+                                Looks like you've found the
+                                doorway to the great nothing
+                            </h1>
+                            <p class="my-2 text-gray-800">Sorry about that! Please visit our hompage to get where you need to go.</p>
+                            <button class="sm:w-full lg:w-auto my-2 border rounded md py-4 px-8 text-center bg-indigo-600 text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-700 focus:ring-opacity-50">Take me there!</button>
+                        </div>
+                    </div>
+                  
+                </div>
+            </div>
+         
+        </div> */}
         <div class="bg-white shadow-md rounded my-6">
             <table class="min-w-max w-full table-auto">
                 <thead>
@@ -353,7 +457,7 @@ function handlecross(){
                 <tbody class="text-gray-600 text-sm font-light">
 
                     {activity.map(jobRecent=>{
-                        const {jobtitle,date,time,idRecent,id} = jobRecent
+                        const {jobtitle,date,timestamp,idRecent,id} = jobRecent
 return(
     <tr class="height border-b border-gray-200 hover:bg-gray-100">
     <td class="py-3 px-6 text-left whitespace-nowrap">
@@ -381,7 +485,7 @@ return(
     <td class="py-3 px-6 text-left">
         <div class="flex items-center">
            
-            <span>{time}</span>
+            <span>{timestamp.time}</span>
         </div>
     </td>
     <td class="py-3 px-6 text-center">

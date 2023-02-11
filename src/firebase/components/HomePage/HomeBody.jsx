@@ -11,16 +11,16 @@ const HomeBody = () => {
          <h1 className='homebody__search--title text-3xl font-semibold text-gray-800 md:text-4xl' style={{color:"black"}}> Hire Expert Professionals for Your business  </h1>
          
     
-         <p className=' mt-2 text-sm text-gray-500 md:text-base'>Proxify is your incredibly friendly people-first hiring partner — we take the personal approach so you get quality and motivated remote developers that match your technology and team needs.</p>
+         <p className=' mt-2 text-sm text-gray-500 md:text-base'>A place where individuals, whether they are experts or marginalised, connect with companies, from start-ups to long-established companies.</p>
         
           {/* <Link to="/signup"> <button className='homebody-getstarted-btn'>Find a job</button></Link>  */}
    <div className="flex">
-   <Link to="/signup">  <button
-        class="homebody-getstarted-btn py-2 px-4 bg-transparent text-white font-semibold border border-black-600 rounded hover:bg-black hover:text-white hover:border-transparent transition ease-in duration-200 "
-      >Apply for a job</button></Link> 
-          <Link to="/signup">  <button
-        class="homebody-getstarted-btn py-2 px-4 bg-transparent text-white font-semibold border border-black-600 rounded hover:bg-black hover:text-white hover:border-transparent transition ease-in duration-200 "
-      >Hire a professional</button></Link> 
+
+   <Link  to="/signup" ><button   className="homebody-getstarted-btn text-white pad-0 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Apply for a job</button>
+                </Link>
+  
+        <Link  to="/employer" ><button   className="homebody-getstarted-btn text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Hire a professional</button>
+                </Link>
           
    </div>
          </div>

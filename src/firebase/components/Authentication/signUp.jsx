@@ -1,9 +1,9 @@
 import React, { useState ,Component} from 'react';
 import {createUserWithEmailAndPassword,Auth, signOut,sendEmailVerification} from"firebase/auth"
 import { app, auth, db } from '../../firebase';
-import { addDoc, doc,setDoc ,collection, getFirestore} from 'firebase/firestore';
+import { addDoc, doc,setDoc ,collection, getFirestore,serverTimestamp} from 'firebase/firestore';
 import { getDownloadURL, listAll, uploadBytesResumable, uploadString } from 'firebase/storage';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Connectors from '../connectors/connectors';
 import GoogleButton from 'react-google-button'
 import { getStorage,ref,uploadBytes } from 'firebase/storage';
@@ -11,6 +11,7 @@ import { v4 } from 'uuid';
 import { UseAuth } from '../../../context/context';
 import { CountryDropdown,RegionDropdown  } from 'react-country-region-selector';
 import { MultiSelect } from 'react-multi-select-component';
+
 
 
 
@@ -56,7 +57,27 @@ const SignUp = () => {
      { label: " Oromo  ", value: " Oromo " },
      { label: "Tigrigna ", value: "Tigrigna"},
    ];
-console.log(firstName)
+
+   
+
+
+
+//    const appID = "2319155620553d59";
+//    const Region = "US";
+//    const appSetting = new CometChat.AppSettingsBuilder().subscribePresenceForAllUsers().setRegion(Region).build();
+//    CometChat.init(appID, appSetting).then(
+//      () => {
+//        console.log("Initialization completed successfully");
+//        // You can now call login function.
+//      },
+//      error => {
+//        console.log("Initialization failed with error:", error);
+//        // Check the reason for error and take appropriate action.
+//      }
+//    );
+
+
+
 const submit = (e)=>{
      const reff = ref(storage, `governmentsonny/${profilePhoto.name}`)
      // const uploadImage= uploadBytesResumable(reff,profilePhoto)
@@ -67,9 +88,12 @@ const submit = (e)=>{
 
 
           createUserWithEmailAndPassword(auth,email,password).then(credentials=>{
-               const db = getFirestore()
+               
 
                const activityRef = collection(db, "Authentication")
+
+
+               
 
 
                uploadImage.on('state_changed', 
@@ -85,11 +109,14 @@ const submit = (e)=>{
                }, 
                () => {
                  // Handle successful uploads on complete
-                 // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+                 // For instance, get the download URL: https://firebasestorage.googleapis.com/..
+                 
+               //   let authKey = "AUTH_KEY";
+
                           getDownloadURL(uploadImage.snapshot.ref).then((downloadURL) => {
 
                  addDoc(collection(activityRef,credentials.user.uid, 'UserDetails'), {
- 
+                    timestamp: serverTimestamp(),
                     firstName:firstName,
                     lastname:lastname,
                     email:email,
@@ -109,7 +136,7 @@ const submit = (e)=>{
                   }).then(
 
                     setDoc(doc(db, 'Auth',credentials.user.uid), {
- 
+                         timestamp: serverTimestamp(),
                          firstName:firstName,
                          lastname:lastname,
                          email:email,
@@ -427,6 +454,8 @@ const handleSubmitLast = (e) =>{
     <div style={{borderTopColor:"transparent",width:"70px",height:70}} className="w-8  border-4 border-blue-500 rounded-full animate-spin"></div>
     {/* <p className="ml-3" style={{fontSize:"30px"}}>Proccessing...</p> */}
 </div>
+<h2 class="text-center text-2xl font-bold tracking-wide text-gray-800">Sign Up</h2>
+                    <p class="text-center text-sm text-gray-600 mt-2">Already have an account?<Link to="/signin"> <a href="#" class="text-blue-600 hover:text-blue-700 hover:underline" title="Sign In">Sign in here</a></Link></p>
 
 	<form onSubmit={handleSubmit} id="signUpContainerpage">
     <div className="grid gap-6 mb-6 lg:grid-cols-2">
@@ -447,11 +476,11 @@ const handleSubmitLast = (e) =>{
                       </div>   
         <div>
             <label htmlFor="phone" className="capitalize block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Phone number</label>
-            <input type="tel" id="phone" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 capitalize block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="+251 90-123-4567" pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"onChange={e=>setPhoneNumber(e.target.value)} />
+            <input type="tel" id="phone" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 capitalize block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="+251 90-123-4567" onChange={e=>setPhoneNumber(e.target.value)} />
         </div>
         
         {/* <div>
-            <label htmlFor="website" className="capitalize block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Website URL</label>
+            <label htmlFor="website" className="capitalize block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Website URL</label>pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"
             <input type="url" id="website" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 capitalize block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="flowbite.com" />
         </div>
         <div>
@@ -482,7 +511,7 @@ const handleSubmitLast = (e) =>{
         </div>
         <label htmlFor="remember" className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-400">I agree with the <a href="#" className="text-blue-600 hover:underline dark:text-blue-500">terms and conditions</a>.</label>
     </div> */}
-    <button  type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Next</button>
+    <button  type="submit" className="paddingbottom text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Next</button>
 </form>
 
 	
@@ -526,7 +555,7 @@ const handleSubmitLast = (e) =>{
             <RegionDropdown
                          classes="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 capitalize block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         country="Ethiopia"
-                        value={""}
+                        value={region}
                         onChange={value=>{setRegion(value)}}
                         /></div>
     <div className="mb-6">

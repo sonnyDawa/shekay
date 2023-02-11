@@ -2,7 +2,7 @@ import React,{useState} from 'react';
 import Price from './price';
 import { UseAuth } from '../../../context/context';
 import { Link } from 'react-router-dom';
-const Signupprice = () => {
+const SignuppriceEmployer = () => {
     const {firstName} = UseAuth()
 	const [yearPriceFreeState, setyearPriceFreeState] = useState(0);
 	const [monthPriceFreeState, setmonthPriceFreeState] = useState(0);
@@ -151,7 +151,7 @@ const Signupprice = () => {
 						</li>
 					</ul>
 					<div class="flex items-center justify-center mt-6">
-						<Link to="/signup">
+						<Link to="/free/employer">
 						<a href="#" class="bg-blue-600 hover:bg-blue-700 px-8 py-2 text-sm text-gray-200 uppercase rounded font-bold transition duration-150" title="Purchase">Choose Free</a>
 
 						</Link>
@@ -234,7 +234,7 @@ const Signupprice = () => {
 						</li>
 					</ul>
 					<div class="flex items-center justify-center mt-6">
-						<Link to="/premium/register">
+						<Link to="/premium/employer">
 						<a href="#" class="bg-blue-600 hover:bg-blue-700 px-8 py-2 text-sm text-gray-200 uppercase rounded font-bold transition duration-150" title="Purchase">Choose Premium</a>
 						</Link>
 					</div>
@@ -317,7 +317,7 @@ const Signupprice = () => {
 					</ul>
 					<div class="flex items-center justify-center mt-6">
 
-							<Link to="/professional/register">
+							<Link to="/professional/employer">
 						<a href="#" class="bg-blue-600 hover:bg-blue-700 px-8 py-2 text-sm text-gray-200 uppercase rounded font-bold transition duration-150" title="Purchase">Choose Professional</a>
 
 							</Link>
@@ -329,4 +329,4 @@ const Signupprice = () => {
     );
 }
 
-export default Signupprice;
+export default SignuppriceEmployer;

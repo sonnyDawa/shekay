@@ -12,19 +12,19 @@ const HomeDescription = () => {
            <h1 className='intro__header'>Why companies should work with us</h1>
 
 <div className="intro__wrapper">
-<h2 className='intro__subheader'><img src="https://img.icons8.com/ios-glyphs/2x/christmas-star--v2.png" alt="dollar" className='intro__icon' /> Proof of quality</h2>
-<p className='intro__para'> Check any pro’s work samples, client reviews, and identity verification.</p>
+<h2 className='intro__subheader'><img src="https://img.icons8.com/ios-glyphs/2x/christmas-star--v2.png" alt="dollar" className='intro__icon' /> Access to diverse individuals</h2>
+<p className='intro__para'> You will have the chance to work with people of different levels of experience and expertise.</p>
 </div>
 
 <div className="intro__wrapper">
-<h2 className='intro__subheader'><img src="https://img.icons8.com/ios-glyphs/344/cheap-2.png" alt="dollar" className='intro__icon' />No cost until you hire </h2>
-<p className='intro__para'>Interview potential fits for your job, negotiate rates, and only pay for work you approve.</p>
+<h2 className='intro__subheader'><img src="https://img.icons8.com/ios-glyphs/344/cheap-2.png" alt="dollar" className='intro__icon' />Privacy protection </h2>
+<p className='intro__para'>We'll make sure that the transfer of files and the conversation between a company and a potential employee are secure.</p>
 </div>
 
 <div className="intro__wrapper">
     
 <h2 className='intro__subheader'><img src="https://img.icons8.com/sf-regular/344/checked-2.png" alt="dollar" className='intro__icon' />Safe and secure</h2>
-<p className='intro__para intro__para--last'>Interview potential fits for your job, negotiate rates, and only pay for work you approve.</p>
+<p className='intro__para intro__para--last'>Signing in and creating an account are free of charge.</p>
 
 </div>
 

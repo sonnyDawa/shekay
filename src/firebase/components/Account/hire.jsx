@@ -1,4 +1,4 @@
-import { addDoc, collection, getFirestore, setDoc,doc } from 'firebase/firestore';
+import { addDoc, collection, getFirestore, setDoc,doc ,serverTimestamp} from 'firebase/firestore';
 import React,{useState} from 'react';
 import { Link } from 'react-router-dom';
 import { v4 } from 'uuid';
@@ -26,8 +26,8 @@ const Hire = () => {
     const handleSubmit =(e)=>{
         e.preventDefault()
         const success = document.getElementById("success")
-        const signup = document.getElementById("signUpContainer")
-        const loading = document.getElementById("loading")
+        const signup = document.getElementById("signUpContainerpagehire")
+        const loading = document.getElementById("loadinghire")
         const activityRef = collection(db, "activityRecent");
         const mainActivityRef = collection(activityRef, users.uid, 'landmarks,')
         const usersid = users.uid + v4()
@@ -54,17 +54,19 @@ const Hire = () => {
                 jobRequirement:jobRequirement,
                 time:time,
                 date:date,
-                id:users.uid,
+                jobId:users.uid,
                 employer:firstName + " " + lastname,
                 profilePic:photo,
                 uniqueKey:usersid,
-                
+                timestamp: serverTimestamp(),
+
                }).then(
               
-                addDoc(collection(activityRef, users.uid, 'landmarks,'), {
+                addDoc(collection(activityRef, users.uid, 'postedJobs'), {
                   jobtitle:jobtitle,
                   jobprice:jobprice,
                   uniqueKey:usersid,
+                  timestamp: serverTimestamp(),
 
                   jobcatagory:jobcatagory,
                   jobdescription:jobdescription,
@@ -76,11 +78,34 @@ const Hire = () => {
                   jobRequirement:jobRequirement,
                   time:time,
                   date:date,
-                  id:users.uid,
+                  jobId:users.uid + v4(),
                   employer:firstName + " " + lastname,
                   profilePic:photo
   
-              }),
+              }).then(
+
+
+                addDoc(collection(activityRef, users.uid, 'ProposalSubmited'), {
+                  // jobtitle:jobtitle,
+                  // jobprice:jobprice,
+                  // uniqueKey:usersid,
+                  // timestamp: serverTimestamp(),
+
+                  // jobcatagory:jobcatagory,
+                  // jobdescription:jobdescription,
+                  // joblength:joblength,
+                  // companyDetail:companyDetail,
+                  // companyname:companyname,
+                  // jobField:jobField,
+                  // contactnumber:contactnumber,
+                  // jobRequirement:jobRequirement,
+                  // time:time,
+                  // date:date,
+                  // id:users.uid,
+                  // employer:firstName + " " + lastname,
+                  // profilePic:photo
+  
+              })),
                 
                 // addDoc(collection(db, "RecentActivity","kjswlk"),{   
 
@@ -89,16 +114,41 @@ const Hire = () => {
                 //  })
                 
            
-               ).then(console.log("done")).catch(e=>console.log(e.message))
+               ).then(
+                setTimeout(() => {
+       
+       
+    
+                  signup.style.width=(0)
+                  loading.style.zIndex=(100)
+                  loading.style.width=("50%")
+         
+                  setTimeout(() => {
+                       
+         
+                       setTimeout(() => {
+                            loading.style.zIndex=(-100)
+                            loading.style.width=(0)
+                            success.style.width=("50%")
+                            success.style.zIndex=(100)
+                       }, 3000)
+                  }, 3000)
+         
+                 
+              
+                  
+            
+           
+               
       
-          }, 3000);
+          }, 3000))
 
          
       
           
-  
+        
     }
-
+        )}
 
     return (
         <div className='accountSell'>
@@ -133,7 +183,7 @@ const Hire = () => {
     
     <div class="flex items-center flex-wrap ">
       <a href="#" class="text-green-800  md:mb-2 lg:mb-0">
-      <p class="inline-flex items-center purple" >Read More
+      <p class="inline-flex items-center " >Read More
               <svg class="w-4 h-4 ml-2" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M5 12h14"></path>
                 <path d="M12 5l7 7-7 7"></path>
@@ -168,11 +218,17 @@ const Hire = () => {
                         
               </div>
             	<div className="right__side-sell">
-              {/* <div id="loading"className='loading'><i className="fa-solid fa-spinner"></i></div>
+            
               <div id="success"className='success'>Job successfully posted <Link to="/dashbord"><i class="fa-sharp cancel fa-solid fa-xmark"></i></Link></div>
-	 */}
-    
-              <form onSubmit={handleSubmit}  id="signUpContainerpage " className='post__job'>
+	
+   <div className='flex items-center justify-center min-h-screen' id='loadinghire'>
+   
+   <div style={{borderTopColor:"transparent",width:"70px",height:70}} className="w-8  border-4 border-blue-500 rounded-full animate-spin"></div>
+   {/* <p className="ml-3" style={{fontSize:"30px"}}>Proccessing...</p> */}
+</div>
+
+    <div id="signUpContainerpagehire">
+              <form onSubmit={handleSubmit}   className='post__job'>
         <div className="mb-6">
             <label htmlFor="jobName" className="capitalize block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Job Name</label>
             <input onChange={e=>{setjobtitle(e.target.value)}} type="text" id="jobName" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 capitalize block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Abebe" />
@@ -282,7 +338,7 @@ const Hire = () => {
     </div> */}
     <button  type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Next</button>
 </form>
-    
+</div>
     
     
 

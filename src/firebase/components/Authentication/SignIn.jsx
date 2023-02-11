@@ -2,6 +2,8 @@ import React,{useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UseAuth } from '../../../context/context';
 import GoogleButton from 'react-google-button';
+import { Link } from 'react-router-dom';
+
 
 const SignIn = ({uid}) => {
   const [email,setEmail] = useState(null)
@@ -54,6 +56,10 @@ return (
 <div style={{borderTopColor:"transparent",width:"70px",height:70}} className="w-8  border-4 border-blue-500 rounded-full animate-spin"></div>
 {/* <p className="ml-3" style={{fontSize:"30px"}}>Proccessing...</p> */}
 </div>
+
+<h2 class="text-center text-2xl font-bold tracking-wide text-gray-800">Sign In</h2>
+                    <p class="text-center text-sm text-gray-600 mt-2">Don't have an account?<Link to="/signup"> <a href="#" class="text-blue-600 hover:text-blue-700 hover:underline" title="Sign up">Sign up here</a></Link></p>
+
 
 <form onSubmit={handleSubmit} id="signinContainer">
 

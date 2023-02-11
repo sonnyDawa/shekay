@@ -1,11 +1,11 @@
 import React from 'react';
-
+import { Link } from 'react-router-dom';
 const Price = () => {
     return (
 
 
 // <!-- ====== Pricing Section Start -->
-<section
+<section 
    class="
    bg-white
    pt-20
@@ -15,9 +15,10 @@ const Price = () => {
    relative
    z-20
    overflow-hidden
+   price-center
    "
    >
-   <div class="container">
+   <div class="container text-center">
       <div class="flex flex-wrap -mx-4">
          <div class="w-full px-4">
             <div class="text-center mx-auto mb-[60px] lg:mb-20 max-w-[510px]">
@@ -61,12 +62,12 @@ const Price = () => {
                "
                >
                <span class="text-primary font-semibold text-lg block mb-4">
-               Personal
+               Free Plan
                </span>
                <h2 class="font-bold text-dark mb-5 text-[42px]">
-                  $59
+                 Birr 0
                   <span class="text-base text-body-color font-medium">
-                  / year
+                  /Forever
                   </span>
                </h2>
                <p
@@ -99,7 +100,8 @@ const Price = () => {
                      3 Months support
                   </p>
                </div>
-               <a
+        <Link to="/freeplan">
+        <a
                   href="javascript:void(0)"
                   class="
                   w-full
@@ -112,12 +114,13 @@ const Price = () => {
                   rounded-md
                   text-center
                   p-4
-                  hover:text-white hover:bg-primary hover:border-primary
+                   hover:bg-primary hover:border-primary
                   transition
                   "
                   >
-               Choose Personal
+               Choose Free 
                </a>
+        </Link>
                <div>
                   <span class="absolute right-0 top-7 z-[-1]">
                      <svg
@@ -403,12 +406,12 @@ const Price = () => {
                "
                >
                <span class="text-primary font-semibold text-lg block mb-4">
-               Business
+               Premium
                </span>
                <h2 class="font-bold text-dark mb-5 text-[42px]">
-                  $199
+               Birr 199.99 
                   <span class="text-base text-body-color font-medium">
-                  / year
+                  / Month
                   </span>
                </h2>
                <p
@@ -441,15 +444,16 @@ const Price = () => {
                      4 Months support
                   </p>
                </div>
-               <a
-                  href="javascript:void(0)"
+   <Link to="/premium">
+   <a
+                  href="#"
                   class="
                   w-full
                   block
                   text-base
                   font-semibold
                   text-white
-                  bg- black
+                  bg-black
                   
                   rounded-md
                   text-center
@@ -459,8 +463,8 @@ const Price = () => {
                   "
                   style={{backgroundColor:"#4c00ff"}}
                   >
-               Choose Business
-               </a>
+               Choose Premium
+               </a></Link>
                <div>
                   <span class="absolute right-0 top-7 z-[-1]">
                      <svg
@@ -749,9 +753,9 @@ const Price = () => {
                Professional
                </span>
                <h2 class="font-bold text-dark mb-5 text-[42px]">
-                  $256
+                  Birr 99.99
                   <span class="text-base text-body-color font-medium">
-                  / year
+                  / Month
                   </span>
                </h2>
                <p
@@ -784,7 +788,8 @@ const Price = () => {
                      12 Months support
                   </p>
                </div>
-               <a
+         <Link to="/professional">
+         <a
                   href="javascript:void(0)"
                   class="
                   w-full
@@ -797,12 +802,12 @@ const Price = () => {
                   rounded-md
                   text-center
                   p-4
-                  hover:text-white hover:bg-primary hover:border-primary
+                   hover:bg-primary hover:border-primary
                   transition
                   "
                   >
                Choose Professional
-               </a>
+               </a></Link>
                <div>
                   <span class="absolute right-0 top-7 z-[-1]">
                      <svg

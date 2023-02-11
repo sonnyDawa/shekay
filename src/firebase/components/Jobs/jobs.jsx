@@ -1,13 +1,12 @@
 import React,{useEffect,useState} from 'react';
-import {onSnapshot,collection, getFirestore, setDoc, addDoc} from "firebase/firestore"
+import {onSnapshot,collection, getFirestore, setDoc, addDoc,doc, getDoc,updateDoc,serverTimestamp} from "firebase/firestore"
 import ReactPaginate from 'react-paginate';
 import JobModal from './jobModal';
 import { UseAuth } from '../../../context/context';
 import { async } from '@firebase/util';
 import { date,time } from '../AccountEmployer/accountemployer';
-
-
-
+import { getDownloadURL, getStorage, ref, uploadBytesResumable} from 'firebase/storage';
+import { app } from '../../firebase';
   
 
 const Jobs = () => {
@@ -16,6 +15,8 @@ const Jobs = () => {
     const [search,setsearch] = useState("")
     const [firstName,setfirstName] = useState("")
     const [lastname,setlastname] = useState("")
+    const [resume,setresume] = useState(null)
+
 
 
     const [birthDate,setbirthDate] = useState("")
@@ -29,17 +30,26 @@ const Jobs = () => {
     const [postsPerPage,setPostsperPage] = useState(4)
     const [currentPage,setCurrentPage] = useState(1)
     const [pageNumber,setPageNumber] = useState(0)
+    const [progress,setprogress] = useState(null)
+
     const [selectedJob,setselectedJob] = useState([])
     const [job,setjob] = useState([])
     const [messageSent,setmessageSent] = useState([])
-    const [uid,setid] = useState("")
+    const [jobid,setjobid] = useState("")
+    const [uniqueKey,setuniqueId] = useState("")
 
-const {users} =UseAuth()
+
+const {users,authtext} =UseAuth()
     const wrapper__modal = document.getElementById("wrapper__modal")
     const    modal_jobs = document.getElementById("popup__main")
     const db = getFirestore()
     const mainJob = document.getElementById("main__job")
-    const activityRef = collection(db, "activityRecent");
+    const grid = document.getElementById("div_grid")
+    const activityRef = collection(db, "Message");
+   
+                      
+
+
 
     useEffect(() => {
       (async()=>{
@@ -57,30 +67,128 @@ const {users} =UseAuth()
       }, [])
 
     
-
-
-    const handleApplySubmit =(e)=>{
-      e.preventDefault()
+      const storage = getStorage(app)
       const apply = document.getElementById("apply__page")
+
+      // const main = document.getElementById("popup__main")
+      const main = document.getElementById("popup__main")
+  
+      // const id = collection(activityRef, users.uid, 'landmarks,')
+  
+      const loading = document.getElementById("loading_jobss")
+  const selectid =(id) =>{
+    console.log(id)
+  }
+
+    const handleApplySubmit =async(e)=>{
+      e.preventDefault()
+      // const apply = document.getElementById("apply__page")
 
       const success = document.getElementById("success__job")
 
-      const loading = document.getElementById("loading_jobss")
+      // const loading = document.getElementById("loading_jobss")
+      // createUserWithEmailAndPassword(auth,email,password).then(credentials=>{
+        const db = getFirestore()
 
-      addDoc(collection(activityRef, uid, 'landmarks'), {
-     employersFirstName:firstName,
-     employerslastname:lastname,
-     employersEmail:email,
-     employersBirthDate:birthDate,
-     employersMessage:message,
-     employersPhoneNumber:phoneNumber,
-     employersSalaryexpectation:salaryexpectation,
-        time:time,
-        date:date,
-        id:users.uid
 
-    })
+        // const activityRef = collection(db, "Authentication")
+        const combinedId =
+        users.uid > jobid
+          ? users.uid + jobid
+          : jobid + users.uid;
+     const reff = ref(storage, `resume/${resume.name}`)
+     const uploadImage= uploadBytesResumable(reff,resume)
+    //  const success = document.getElementById("success__job")
+// selectedJob.map(item=>{
+//   const {id} = item
+//   console.log(id)
+// })
+const mainRef= collection(activityRef,users.uid,uniqueKey)
+const messageRef = collection(mainRef,jobid,"uniqueKey")
+
+
+
+// const handleSelect = async () => {
+  //check whether the group(chats in firestore) exists, if not create
+ 
+  // try {
+    const res = await getDoc(doc(db, "chats", combinedId));
+
+    // if (!res.exists()) {
+      //create a chat in chats collection
+      await setDoc(doc(db, "chats", combinedId), { messages: [] });
+
+      //create user chats
+
+
+
+      uploadImage.on('state_changed', 
+      (snapshot) => {
+        // Observe state change events such as progress, pause, and resume
+        // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        setprogress(progress)
+
+      }, 
+      (error) => {
+        console.log(error)
+      }, 
+      () => {
+        // Handle successful uploads on complete
+        // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+             
+
+      getDownloadURL(uploadImage.snapshot.ref).then((downloadURL) => {
+        updateDoc(doc(db, "userChats", users.uid), {
+            [jobid + ".userInfo"]: {
+                          employersFirstName:firstName,
+                          employerslastname:lastname,
+                          employersEmail:email,
+                          employersBirthDate:birthDate,
+                          employersMessage:message,
+                          employersPhoneNumber:phoneNumber,
+                          forjobId: jobid,
+                          employersSalaryexpectation:salaryexpectation,
+                            time:time,
+                             date:date,
+                             id:users.uid,
+                             resume:downloadURL,
+                             uniquejobKey:uniqueKey
+            },
+            [jobid + ".date"]: serverTimestamp(),
+          })
+          }).then(
+
+                    success.style.width="100%",
+                    success.style.zIndex=200
+                   
+
+         )
+          
+      }
+
+      // )}
+     
+ )
+
+
+
+
+      // await updateDoc(doc(db, "userChats", user.uid), {
+      //   [combinedId + ".userInfo"]: {
+      //     uid: users.uid,
+      //     displayName: users.displayName,
+      //     photoURL: users.photoURL,
+      //   },
+      //   [combinedId + ".date"]: serverTimestamp(),
+      // });
     
+   
+
+ 
+
+
+
 
        
     
@@ -90,18 +198,13 @@ const {users} =UseAuth()
     }
 
     const handleJobList = ()=>{
-      const apply = document.getElementById("popup")
-
-      // const main = document.getElementById("popup__main")
-      const main = document.getElementById("popup__main")
-
-
-      const loading = document.getElementById("loading_jobss")
+    
  
       setTimeout(() => {
        
        
-    
+        grid.style.display="none"
+        loading.style.zIndex=(0)
         main.style.width=(0)
       //  main.style.zIndex=(0)
         loading.style.zIndex=(100)
@@ -114,6 +217,8 @@ const {users} =UseAuth()
                   loading.style.width=(0)
                   loading.style.zIndex=(0)
                   apply.style.zIndex=(100)
+                  apply.style.display=("flex")
+
                   apply.style.width=("100%")
              }, 1000);
         }, 1000);
@@ -130,7 +235,6 @@ const {users} =UseAuth()
     const handleClick = ()=>{
       const loading = document.getElementById("loading__job")
       const main = document.getElementById("popup")
-      const success = document.getElementById("success__job")
       setTimeout(() => {
         main.style.zIndex=0
    
@@ -145,8 +249,7 @@ const {users} =UseAuth()
 
         setTimeout(() => {
           
-          success.style.width="100%"
-          success.style.zIndex=200
+        
         },5500);
         
       },1000);
@@ -155,7 +258,11 @@ const {users} =UseAuth()
 
    function setselected(item){
     setselectedJob(item)
+    setuniqueId(item.uniqueKey)
+
    
+   setjobid( item.jobId)
+    grid.style.display="none"
 
     modal_jobs.style.width=("100%")
 
@@ -167,6 +274,8 @@ const {users} =UseAuth()
     function handleBack(){
 
       setTimeout(() => {
+        grid.style.display="block"
+
       modal_jobs.style.width=(0)
 
       }, 2);
@@ -192,7 +301,13 @@ const {users} =UseAuth()
 
         function minimize(){
       const success = document.getElementById("success__job")
-           
+      modal_jobs.style.width=(0)
+      grid.style.display="block"
+      apply.style.display=("none")
+      loading.style.width=(0)
+      loading.style.zIndex=(0)
+      apply.style.width=("0")
+
          success.style.width=(0)
         }
   function handleClick2(){
@@ -233,6 +348,18 @@ const {users} =UseAuth()
 </div>
 
 
+                <div>
+                <div className='relative '  style={{width:"100%",height:"100%"}}>
+
+
+                
+<div className='flex items-center justify-center min-h-screen flex_ ' id='apply__page' >
+<div className='leftside__img-signup leftside__img-signup-job' >
+<img className='leftside__imgsignup img-signup-job' src="https://firebasestorage.googleapis.com/v0/b/test-f59f4.appspot.com/o/users%2FSign%20up-cuate.svg?alt=media&token=ec81cc05-0629-49f8-a769-659ab18cdc5c" alt="" />
+</div>
+
+<form   className='rightside__img-signup p-16' id="signUpContainerpageApply" >
+    
 <div className=' ' id='success__job'>
    <div className='align'>
    <i className=" fa-sharp fa-solid fa-xmark text-white" id='cancel' onClick={minimize}></i>
@@ -241,25 +368,15 @@ const {users} =UseAuth()
    <h1 className='text-whitee capitalize'style={{color:"white"}}>Proposal submited successfully</h1>
    </div>
 </div>
-                <div>
-                <div className='relative '  style={{width:"100%",height:"100%"}}>
-
-
-
-<div className='flex items-center justify-center min-h-screen ' id='apply__page'>
-   
-  
-<form  id="signUpContainerpage " className='auto9'>
-    <div className="grid gap-6 mb-6 lg:grid-cols-2">
-        <div>
+        <div className="mb-6">
             <label htmlFor="first_name" className="capitalize block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">First name</label>
             <input onChange={e=>setfirstName(e.target.value)} type="text" id="first_name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 capitalize block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Abebe" />
         </div>
-        <div>
+        <div className="mb-6">
             <label htmlFor="last_name" className="capitalize block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Last name</label>
             <input onChange={e=>setlastname(e.target.value)} type="text" id="last_name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 capitalize block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Solomon"  />
         </div>
-        <div>
+        <div className="mb-6">
             
             <label htmlFor="company" className="capitalize block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Birth Date</label>
            
@@ -268,20 +385,13 @@ const {users} =UseAuth()
                       </div>   
 
 
-        <div>
+        <div className="mb-6">
             <label htmlFor="phone" className="capitalize block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Phone number</label>
             <input onChange={e=>setphoneNumber(e.target.value)} type="tel" id="phone" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 capitalize block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="123-45-678" pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"get />
         </div>
         
-        <div>
-            <label htmlFor="website" className="capitalize block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Website URL</label>
-            <input type="url" id="website" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 capitalize block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="flowbite.com" />
-        </div>
-        <div>
-            <label htmlFor="visitors" className="capitalize block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Unique visitors (per month)</label>
-            <input type="number" id="visitors" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 capitalize block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="" />
-        </div> 
-    </div>
+
+    
 
   
 
@@ -305,7 +415,7 @@ const {users} =UseAuth()
  {/* <!-- This is an example component -->  */}
 <div className="max-w-2xl mx-auto">
 
-<input className="capitalize block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-white-700 dark:border-gray-600 dark:placeholder-gray-400" id="file_input" type="file"/>
+<input onChange={e=>setresume(e.target.files[0])} className="capitalize block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-white-700 dark:border-gray-600 dark:placeholder-gray-400" id="file_input" type="file"/>
 
 
     
@@ -317,9 +427,9 @@ const {users} =UseAuth()
     <div className="mb-6">
     <label
           for="message"
-          class="mb-3 block text-base font-medium text-[#07074D]"
+          class="capitalize mb-3 block text-base font-medium text-[#07074D]"
         >
-          Message
+          Message to the employer
         </label>
         <textarea
         onChange={e=>setmessage(e.target.value)}
@@ -335,8 +445,12 @@ const {users} =UseAuth()
         <input id="remember" type="checkbox" value="" className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800" />
         </div>
         <label htmlFor="remember" className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-400">I agree with the <a href="#" className="text-blue-600 hover:underline dark:text-blue-500">terms and conditions</a>.</label>
-    </div> *
+    </div> 
     <button onClick={handleApplySubmit}  type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit Proposal</button>
+    {progress &&    <div class="w-full bg-gray-200 rounded-full padding-progress">
+  <div class="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-l-full" style={{width:progress + "%"}}> {progress}</div>
+</div>}
+
 </form> 
 </div>
 
@@ -361,7 +475,7 @@ const {users} =UseAuth()
          
           <h1 class="mb-2 font-bold  text-blue-500">Job Description: <p class=" font-semibold  text-black">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid neque sapiente sint eum doloremque, fugiat cupiditate asperiores? Excepturi nisi id dolorum libero magni aliquid ad aut! Aliquid sequi omnis vitae.</p></h1>
           
-          <h1 class="mb-2 font-bold  text-blue-500">Job Requirement: <p class=" font-semibold  text-black">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid neque sapiente sint eum doloremque, fugiat cupiditate asperiores? Excepturi nisi id dolorum libero magni aliquid ad aut! Aliquid sequi omnis vitae.</p></h1>
+          <h1 class="mb-2 font-bold  text-blue-500">Job Requirement: <p class=" font-semibold  text-black">L-orem ipsum dolor sit amet consectetur adipisicing elit. Aliquid neque sapiente sint eum doloremque, fugiat cupiditate asperiores? Excepturi nisi id dolorum libero magni aliquid ad aut! Aliquid sequi omnis vitae.</p></h1>
           
 
     
@@ -376,8 +490,10 @@ const {users} =UseAuth()
         >
               <button onClick={handleBack}  className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 capitalize margin">Back</button>
 
-              <button onClick={handleJobList} className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Apply</button>
+{/* <div onClick={()=>selectid(id)}> */}
+<button onClick={handleJobList} className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Apply</button>
 
+{/* </div> */}
         </div>
       </div>
     </div>
@@ -399,12 +515,24 @@ const {users} =UseAuth()
         </div>
 
 
-                <label htmlFor=""><input type="text" className='jobs__search' placeholder='search here' onChange={(e)=>{
-                  setsearch(e.target.value)
-                }}  />
-                        <ion-icon name="search"></ion-icon>
-                        </label>
+<div class="max-w-2xl mx-auto">
+
+	 
+        <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-gray-300">Search</label>
+        <div class="relative">
+            <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+                <svg class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            </div>
+            <input onChange={(e)=>{
+                  setsearch(e.target.value)}} type="search" id="default-search" class="block p-4 pl-10 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search Mockups, Logos..." />
+        </div>
+  
+
+</div>
+
+             
 <div>
+  <div id='div_grid'>
 <div  className='grid'  >
                 {job.filter(item=>{
                     if (search==""){
@@ -507,7 +635,7 @@ const {users} =UseAuth()
                 
                 })}
             </div>
-            </div>
+          
             <div className='paginate__btn'>
                 <ReactPaginate
                 previousLabel={"Previous"}
@@ -522,8 +650,8 @@ const {users} =UseAuth()
                 />
             
             </div>
-           
-          
+            </div>  
+            </div>
         </div>
     );
 }

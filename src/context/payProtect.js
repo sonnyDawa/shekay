@@ -4,18 +4,18 @@ import { UseAuth } from './context';
 import { Navigate } from 'react-router-dom';
 
 
-    const ProtectedRoutes = ({ children }) => {
+    const Protected = ({ children }) => {
         const { users,verfied,paid } = UseAuth();
     
-     let daw = false
+    //  let paid = true
      
 
 
-        if (!users) {
-          return <Navigate to="/signin" />;
+        if (paid) {
+          return <Navigate to="/account" />;
         }
     
         return children
       };
 
-export default ProtectedRoutes;
+export default Protected;
