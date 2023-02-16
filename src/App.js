@@ -6,7 +6,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import SignIn from './firebase/components/Authentication/SignIn';
 import SignUp from './firebase/components/Authentication/signUp';
 import Home from './firebase/components/HomePage/home';
-import Chat from "./firebase/components/Message/chat"
+// import Chat from "./firebase/components/Message/chat"
 import Account from './firebase/components/Account/account';
 
 import Hire from './firebase/components/Account/hire';
@@ -50,6 +50,7 @@ import CheckoutProfessional from './firebase/components/PriceTable.jsx/checkoutP
 import SignuppriceEmployer from './firebase/components/PriceTable.jsx/signuppriceEmployer';
 import CheckoutpageCompany from './firebase/components/PriceTable.jsx/premium/premiumCheckoutEmployer';
 import CheckoutpageEmployer from './firebase/components/PriceTable.jsx/premium/premiumCheckoutEmployer';
+import EmailVervied from './context/emailverfied';
 
 function App() {
   return (
@@ -60,7 +61,7 @@ function App() {
       <Routes>
         <Route element={<SignIn /> } path="/signin"/>
         {/* <Route  element={<SignUp/> } path="/signup"/>  */}
-        <Route  element={<Chat/> } path="/message"/> 
+        {/* <Route  element={<Chat/> } path="/message"/>  */}
         <Route  element={<AboutUs/> } path="/aboutus"/> 
         <Route  element={
            <Protected>
@@ -78,7 +79,7 @@ function App() {
       } path="/dashbord"/> 
         <Route  element={<Employee/> } path="/individual"/> 
         <Route  element={<Company/> } path="/company"/> 
-        <Route  element={<Home/>} path="/"/>
+        <Route  element={<Home/>} path="/shekay"/>
         <Route  element={<Hire/>} path="/hire"/>
         <Route  element={<Jobs/>} path="/jobs"/>
         <Route  element={<Signupprice/>} path="/price"/>
@@ -87,7 +88,7 @@ function App() {
               <Checkoutpage/>
               </Protected>} path="/premium/checkout"/>
         {/* <Route  element={<ProfessionalChoice/>} path="/professional/checkout"/> */}
-        <Route  element={<CheckoutProfessional/>} path="/professional/checkout"/>
+        <Route  element={<Protected><CheckoutProfessional/></Protected>} path="/professional/checkout"/>
 
         
         <Route  element={<PaymentCheck/>} path="/check"/>
@@ -144,12 +145,16 @@ function App() {
         <Route
             path='/account'
             element={
-              <PaymentProtect>
               <ProtectedRoutes>
+<EmailVervied>
+              <PaymentProtect>
                {/* <Account/> */}
                <AccountMain/>
-              </ProtectedRoutes>
+               
               </PaymentProtect>
+              </EmailVervied>
+              </ProtectedRoutes>
+
             }
           />
         

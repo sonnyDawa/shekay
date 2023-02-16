@@ -8,7 +8,7 @@ import GoogleButton from 'react-google-button';
 import { MultiSelect } from 'react-multi-select-component';
 import { CountryDropdown,RegionDropdown  } from 'react-country-region-selector';
 import { ref,uploadBytesResumable ,getDownloadURL} from 'firebase/storage';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword ,sendEmailVerification} from 'firebase/auth';
 import { db } from '../../../firebase';
 import { auth } from '../../../firebase';
 
@@ -194,7 +194,17 @@ const submit = (e)=>{
        
 
       })
-               ).then(navigate("/premium/checkout")).catch(e=>(console.log(e.message))) 
+               ).then(
+                setDoc(doc(db, 'userChats',credentials.user.uid),{})
+
+               ).then(
+
+
+sendEmailVerification(auth.currentUser)
+  .then(() => {
+    navigate("/premium/checkout")
+  })
+               )
  
  
  
@@ -361,7 +371,7 @@ const handleSubmitLast = (e) =>{
 
         <div className="mb-6 flexhalf">
             <label htmlFor="last_name" className="capitalize block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Last name</label>
-            <input type="text" id="last_name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 capitalize block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Solomon" onChange={e=>setLastName(e.target.value)} />
+            <input type="text" id="last_name" className=" border border-gray-300 text-gray-50 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 capitalize block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Solomon" onChange={e=>setLastName(e.target.value)} />
         </div>
         </div>
         <div className="mb-6">
@@ -373,7 +383,7 @@ const handleSubmitLast = (e) =>{
                       </div>   
         <div className="mb-6"> 
             <label htmlFor="phone" className="capitalize block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Phone number</label>
-            <input type="tel" id="phone" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 capitalize block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="123-45-678" pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"onChange={e=>setPhoneNumber(e.target.value)} />
+            <input type="tel" id="tel" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 capitalize block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="123-45-678" pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"onChange={e=>setPhoneNumber(e.target.value)} />
         </div>
         
         {/* <div>

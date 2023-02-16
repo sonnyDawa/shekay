@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import { UseAuth } from '../../../context/context';
 import ReactPaginate from 'react-paginate';
 import { app } from '../../firebase';
-import { getAuth,signOut } from 'firebase/auth';
+import { getAuth,signOut,onAuthStateChanged } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import AccountSell from '../Account/accountsell';
 
@@ -23,6 +23,8 @@ const Accountemployer = () => {
     const [docu,setDoc] = useState([])
     const [activity,setActivity] = useState([])
     const [nullUser,setnullUser] = useState("")
+    const [uid,setuid] = useState("")
+
 
     const [selectedRecent,setselectedRecent] = useState("")
 
@@ -33,37 +35,26 @@ const Accountemployer = () => {
     const auth = getAuth()
     const navigate = useNavigate()
     const activityRef = collection(db, "activityRecent");
+    const cityRef =  collection(activityRef, uid, 'postedJobs')
+    const q = query(cityRef, orderBy("timestamp","desc"));
     const main = document.getElementById("cancel")
-    const deleteDocument = collection(activityRef, users.uid, 'landmarks,')
+    const deleteDocument = collection(q, uid, 'postedJobs')
 
-  
+    useEffect(() => {
+        
+        (async()=>{
+          onAuthStateChanged(auth,user=>{
+              if(user){
+                  setuid(user.uid)
+              }
+              else(console.log("out"))
+          })
+       
+        })
+       ()
+      }, []);
     // const q = query(collection(db, "activityRecent"), where(1));
 
- if (activity.length == 0){
-    const nulluser =    (  <div class="lg:px-24 lg:py-24 md:py-30 md:px-44 px-4 py-24 items-center flex justify-center flex-col-reverse lg:flex-row md:gap-28 gap-106">
-    <div class="xl:pt-24 w-full xl:w-1/2 relative pb-12 lg:pb-0">
-        <div class="relative">
-            <div class="absolute">
-                <div class="">
-                    <h1 class="my-2 text-gray-800 font-bold text-2xl">
-                        Looks like you've found the
-                        doorway to the great nothing
-                    </h1>
-                    <p class="my-2 text-gray-800">Sorry about that! Please visit our hompage to get where you need to go.</p>
-                    <button class="sm:w-full lg:w-auto my-2 border rounded md py-4 px-8 text-center bg-indigo-600 text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-700 focus:ring-opacity-50">Take me there!</button>
-                </div>
-            </div>
-          
-        </div>
-    </div>
- 
-</div> )
-
- }
- else{
-    console.log("not fill")
-
- }
 
 
     // useEffect(() => {
@@ -131,7 +122,7 @@ if(seconds<3600){
 
     useEffect(() => {
         (async()=>{
-         onSnapshot(collection(activityRef, users.uid, 'postedJobs')
+         onSnapshot(q
          ,(snapshot)=>{
              let recent = []
              snapshot.forEach(item=>{
@@ -192,7 +183,7 @@ function handlecross(){
     main.style.width=(0),
     main.style.zIndex=(-100)
 
- ).then()
+ ).then(console.log(selectedRecent)).catch(e=>console.log(e.message))
     // deleteDoc(collection(activityRef, selectedRecent, 'landmarks')) 
   }
 
@@ -200,7 +191,7 @@ function handlecross(){
        
           
 //      (async()=>{
-//         console.log(users.uid)
+//         console.log(uid)
 //         const docRef = doc(db, "JobActivity", users.uid);
 //         const docSnap = getDocs(docRef).then(snapshot=>{
 //           const activity = []

@@ -111,7 +111,7 @@ import { signOut } from 'firebase/auth';
 
 </aside>
 
-<div className="flex flex-col justify-center center ml-auto mb-6 lg:w-[75%] xl:w-[80%] 2xl:w-[85%]">
+<div className="bg-white flex flex-col justify-center center ml-auto mb-6 lg:w-[75%] xl:w-[80%] 2xl:w-[85%]">
         
             <div class="container mx-auto px-6 py-16 text-center">
                 <div class="mx-auto max-w-lg">

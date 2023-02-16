@@ -7,7 +7,7 @@ const AccountSell = () => {
                  <header class="min-h-screen getstarted--main ">
         {/* <!-- Navigaiton Bar --> */}
         <nav class="flex items-center py-8 px-14 justify-between">
-        <div class="flex items-center">
+        {/* <div class="flex items-center">
           <h1 class="text-2xl font-bold text-gray-700 ">LandingKit</h1>
           <div class="ml-10">
             <ul class="md:flex space-x-8 hidden ">
@@ -18,11 +18,11 @@ const AccountSell = () => {
               <li><a href="#" class="text-white font-semibold">Sport</a></li>
             </ul>
           </div>
-        </div>
-        <div class=" bg-white text-gray-800 lg:flex hidden items-center space-x-3 py-3 px-6 bg-indigo-600 text-white rounded-lg  transition-all duration-400 transform hover:scale-105 cursor-pointer hover:shadow-lg">
+        </div> */}
+        {/* <div class=" bg-white text-gray-800 lg:flex hidden items-center space-x-3 py-3 px-6 bg-indigo-600 text-white rounded-lg  transition-all duration-400 transform hover:scale-105 cursor-pointer hover:shadow-lg">
        <button className='bg-white'>Sign Up </button>
    
-        </div>
+        </div> */}
         </nav>
         {/* <!-- End Navigation Bar --> */}
       

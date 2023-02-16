@@ -3,9 +3,9 @@ import React from 'react';
 const HomePara = () => {
     return (
         <div className='home__para'>
-            <h1 className='home__para-header'>Discover the personal way to hire remote developers without the hassle</h1>
+            <h1 className='home__para-header'>Discover the personal way to hire professionals without the hassle</h1>
             <p className='home__para-para mt-2 text-sm text-slate-500'>
-            Finding great developers shouldn't be hard. We make it easy by taking care of the time-consuming parts for you. Our expert team will personally match you with vetted remote developers so you can hire trusted talent with ease.
+            Finding expert professionals shouldn't be hard. We make it easy by taking care of the time-consuming parts for you. Our expert team will personally match you with vetted and dedicated professional for your job so you can hire trusted talent with ease.
             </p>
 
             <div className="home__para-main-wrapper">

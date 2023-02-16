@@ -5,10 +5,12 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { ChatContextProvider } from './context/ChatContext';
 import Context from './context/context';
+import { ErrorBoundary } from './error';
 import ReactDOM from 'react-dom';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
+    <ErrorBoundary>
 <Context>
         <ChatContextProvider>
     
@@ -16,6 +18,7 @@ root.render(
      
     </ChatContextProvider>  
     </Context>  
+    </ErrorBoundary>
     );
 
 // If you want to start measuring performance in your app, pass a function

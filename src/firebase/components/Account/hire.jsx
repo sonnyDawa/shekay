@@ -1,8 +1,10 @@
 import { addDoc, collection, getFirestore, setDoc,doc ,serverTimestamp} from 'firebase/firestore';
-import React,{useState} from 'react';
+import React,{useState,useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import { v4 } from 'uuid';
 import { UseAuth } from '../../../context/context';
+import { auth } from '../../firebase';
+import { onAuthStateChanged } from 'firebase/auth';
 
 const Hire = () => {
     const [jobtitle,setjobtitle] = useState(null)
@@ -14,6 +16,8 @@ const Hire = () => {
     const [jobField,setjobfield] = useState(null)
     const [companyname,setcompanyname] = useState(null)
     const [joblength,setjoblength] = useState(null)
+    const [uid,setuid] = useState(null)
+
     const [companyDetail,setcompanydetail] = useState(null)
     const [jobRequirement,setjobRequirement] = useState(null)
     const db = getFirestore()
@@ -21,6 +25,19 @@ const Hire = () => {
     const current = new Date();
     const date = `${current.getDate()}/${current.getMonth()+1}/${current.getFullYear()}`;
     const time = `${current.getHours()}:${current.getMinutes()}:${current.getSeconds()}`;
+
+    useEffect(() => {
+        
+      (async()=>{
+        onAuthStateChanged(auth,user=>{
+            if(user){
+                setuid(user.uid)
+            }
+        })
+     
+      })
+     ()
+    }, []);
     // const [authError,setAuthError] = useState(null)
 
     const handleSubmit =(e)=>{
@@ -29,8 +46,12 @@ const Hire = () => {
         const signup = document.getElementById("signUpContainerpagehire")
         const loading = document.getElementById("loadinghire")
         const activityRef = collection(db, "activityRecent");
-        const mainActivityRef = collection(activityRef, users.uid, 'landmarks,')
-        const usersid = users.uid + v4()
+        // const mainActivityRef = collection(activityRef, users.uid, 'landmarks,')
+
+        // const activityRe = doc(db,"userChats",users.uid);
+
+        const jobid = uid + v4()
+
 
         setTimeout(() => {
         
@@ -40,7 +61,7 @@ const Hire = () => {
           // loading.style.width=("60%")
 
           
-              addDoc(collection(db, "MainJobSection"), {
+              addDoc(collection(db, "MainJobSection",uid), {
                         uniqueKey:lastname + firstName +v4(),
                 jobtitle:jobtitle,
                 jobprice:jobprice,
@@ -54,38 +75,29 @@ const Hire = () => {
                 jobRequirement:jobRequirement,
                 time:time,
                 date:date,
-                jobId:users.uid,
+                // jobId:uid,
                 employer:firstName + " " + lastname,
-                profilePic:photo,
-                uniqueKey:usersid,
+                // profilePic:photo,
                 timestamp: serverTimestamp(),
 
-               }).then(
+               })      .catch(e=>console.log(e.message)).then(
+                console.log("done"))
+               .then(
               
-                addDoc(collection(activityRef, users.uid, 'postedJobs'), {
+                addDoc(collection(activityRef,uid,jobid), {
                   jobtitle:jobtitle,
                   jobprice:jobprice,
-                  uniqueKey:usersid,
                   timestamp: serverTimestamp(),
 
-                  jobcatagory:jobcatagory,
-                  jobdescription:jobdescription,
-                  joblength:joblength,
-                  companyDetail:companyDetail,
-                  companyname:companyname,
-                  jobField:jobField,
-                  contactnumber:contactnumber,
-                  jobRequirement:jobRequirement,
-                  time:time,
+            
                   date:date,
-                  jobId:users.uid + v4(),
+                  jobId:jobid,
                   employer:firstName + " " + lastname,
-                  profilePic:photo
+                  // profilePic:photo
   
-              }).then(
-
-
-                addDoc(collection(activityRef, users.uid, 'ProposalSubmited'), {
+              })
+       
+                // setDoc(doc(activityRe), {
                   // jobtitle:jobtitle,
                   // jobprice:jobprice,
                   // uniqueKey:usersid,
@@ -105,7 +117,10 @@ const Hire = () => {
                   // employer:firstName + " " + lastname,
                   // profilePic:photo
   
-              })),
+              // }
+              // )
+              
+                
                 
                 // addDoc(collection(db, "RecentActivity","kjswlk"),{   
 
@@ -113,26 +128,26 @@ const Hire = () => {
               
                 //  })
                 
-           
-               ).then(
-                setTimeout(() => {
+               )
+    //            ).then(
+    //             setTimeout(() => {
        
        
     
-                  signup.style.width=(0)
-                  loading.style.zIndex=(100)
-                  loading.style.width=("50%")
+    //               signup.style.width=(0)
+    //               loading.style.zIndex=(100)
+    //               loading.style.width=("50%")
          
-                  setTimeout(() => {
+    //               setTimeout(() => {
                        
          
-                       setTimeout(() => {
-                            loading.style.zIndex=(-100)
-                            loading.style.width=(0)
-                            success.style.width=("50%")
-                            success.style.zIndex=(100)
-                       }, 3000)
-                  }, 3000)
+    //                    setTimeout(() => {
+    //                         loading.style.zIndex=(-100)
+    //                         loading.style.width=(0)
+    //                         success.style.width=("50%")
+    //                         success.style.zIndex=(100)
+    //                    }, 3000)
+    //               }, 3000)
          
                  
               
@@ -141,7 +156,7 @@ const Hire = () => {
            
                
       
-          }, 3000))
+    //       }, 3000))
 
          
       

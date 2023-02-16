@@ -2,7 +2,7 @@ import React,{createContext,useContext,useState,useEffect,useReducer} from 'reac
 import { app } from '../firebase/firebase';
 import { useNavigate } from 'react-router-dom';
 import { auth ,} from '../firebase/firebase';
-import { createUserWithEmailAndPassword,onAuthStateChanged,getAuth,signOut, signInWithEmailAndPassword} from 'firebase/auth';
+import { createUserWithEmailAndPassword,onAuthStateChanged,getAuth,signOut, reauthenticateWithCredential,signInWithEmailAndPassword, EmailAuthProvider} from 'firebase/auth';
 import { addDoc, doc,setDoc ,collection, getFirestore, getDoc,onSnapshot} from 'firebase/firestore';
 import { getDownloadURL, getStorage, listAll, uploadBytesResumable, uploadString ,ref, uploadBytes} from 'firebase/storage';
 import { async } from '@firebase/util';
@@ -175,7 +175,8 @@ useEffect(() => {
       const uid = user.uid;
     //  setcred(uid)
     console.log(uid)
-      setuser(user);
+  setuser(uid);
+     
       onSnapshot(doc(db, "TotalUsers", uid),(snapshot)=>{
         let recent = []
         // snapshot.forEach(item=>{
@@ -241,6 +242,20 @@ const logOut = ()=>{
   signOut(auth)
 }
 
+
+
+// const currentuser = auth.currentUser;
+
+
+// // TODO(you): prompt the user to re-provide their sign-in credentials
+
+
+// reauthenticateWithCredential(currentuser, users).then((user) => {
+//   // User re-authenticated.
+// }).catch((error) => {
+//   // An error ocurred
+//   // ...
+// });
 
 
     

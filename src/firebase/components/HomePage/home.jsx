@@ -15,7 +15,7 @@ import SetUp from './setUp';
 
 const Home = () => {
     return (
-        <div>
+        <div >
             <div className='body'>
             <Nav/>
             <HomeBody/>

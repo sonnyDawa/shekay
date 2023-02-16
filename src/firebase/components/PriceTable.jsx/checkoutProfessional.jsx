@@ -4,14 +4,17 @@ import { UseAuth } from '../../../context/context';
 import { db } from '../../firebase';
 import { setDoc,doc, updateDoc, onSnapshot } from 'firebase/firestore';
 import { Navigate, useNavigate } from 'react-router-dom';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
-const CheckoutProfessional = () => {
+const Checkoutpage = () => {
     const telebirr = "0923580987"
     const ComercialBank = "100089839393"
     const Abyssinia = "7383883"
     const cbebirr = "0923580987"
 
     const [firstname,setfirstname] = useState("")
+    const [uid,setuid] = useState("")
+
     const [lastname,setlastname] = useState("")
     const [notes,setnotes] = useState("")
     const [premium,setpremium] = useState(false)
@@ -35,27 +38,34 @@ const CheckoutProfessional = () => {
     const     waitingpage = document.getElementById("waitingpage")
     const main = document.getElementById("cancel")
     const navigate = useNavigate()
-
+    const auth = getAuth()
 
     useEffect(() => {
         
-      (async()=>{
-     
-      })
-     ()
-    }, []);
+        (async()=>{
+          onAuthStateChanged(auth,user=>{
+              if(user){
+                  setuid(user.uid)
+              }
+          })
+       
+        })
+       ()
+      }, []);
+   
 
+    
     const handleProcess = (e) => {
         e.preventDefault();
         if (paymentProcessor == "commercial bank of ethiopia"){
-            updateDoc(doc(db, "ProfessionalWorker", users.uid), {
+            updateDoc(doc(db, "ProfessionalWorkers", uid), {
                 PaymentMethod:paymentProcessor,
                 paymentName:firstname + " " + lastname,
                 paymentPhone:phoneNumber,
                 paymentEmail:email,
                 processorInfo:ComercialBank
                 }).then(
-                    updateDoc(doc(db, "TotalUsers", users.uid), {
+                    updateDoc(doc(db, "TotalUsers", uid), {
                         PaymentMethod:paymentProcessor,
                         paymentName:firstname + " " + lastname,
                         paymentPhone:phoneNumber,
@@ -88,14 +98,14 @@ const CheckoutProfessional = () => {
            }, 1000))
         }
         else if (paymentProcessor == "Abyssinia Bank"){
-            updateDoc(doc(db, "ProfessionalWorker", users.uid), {
+            updateDoc(doc(db, "ProfessionalWorkers", uid), {
                 PaymentMethod:paymentProcessor,
                 paymentName:firstname + " " + lastname,
                 paymentPhone:phoneNumber,
                 paymentEmail:email,
                 processorInfo:Abyssinia
                 }).then(
-                    updateDoc(doc(db, "TotalUsers", users.uid), {
+                    updateDoc(doc(db, "TotalUsers", uid), {
                         PaymentMethod:paymentProcessor,
                         paymentName:firstname + " " + lastname,
                         paymentPhone:phoneNumber,
@@ -129,14 +139,14 @@ const CheckoutProfessional = () => {
            }, 1000))
         }
         else if (paymentProcessor == "Telebirr"){
-            updateDoc(doc(db, "ProfessionalWorker", users.uid), {
+            updateDoc(doc(db, "ProfessionalWorkers", uid), {
                 PaymentMethod:paymentProcessor,
                 paymentName:firstname + " " + lastname,
                 paymentPhone:phoneNumber,
                 paymentEmail:email,
                 processorInfo:telebirr
                 }).then(
-                    updateDoc(doc(db, "TotalUsers", users.uid), {
+                    updateDoc(doc(db, "TotalUsers", uid), {
                         PaymentMethod:paymentProcessor,
                         paymentName:firstname + " " + lastname,
                         paymentPhone:phoneNumber,
@@ -171,14 +181,14 @@ const CheckoutProfessional = () => {
         }
 
         else if (paymentProcessor == "CBE BIRR"){
-            updateDoc(doc(db, "ProfessionalWorker", users.uid), {
+            updateDoc(doc(db, "ProfessionalWorkers", uid), {
                 PaymentMethod:paymentProcessor,
                 paymentName:firstname + " " + lastname,
                 paymentPhone:phoneNumber,
                 paymentEmail:email,
                 processorInfo:cbebirr
                 }).then(
-                    updateDoc(doc(db, "TotalUsers", users.uid), {
+                    updateDoc(doc(db, "TotalUsers", uid), {
                         PaymentMethod:paymentProcessor,
                         paymentName:firstname + " " + lastname,
                         paymentPhone:phoneNumber,
@@ -350,7 +360,7 @@ const CheckoutProfessional = () => {
       </div>
     </div>
 
-    Order Summary
+
 
 
 
@@ -380,6 +390,7 @@ const CheckoutProfessional = () => {
             <h1 class="flex items-center justify-center font-bold text-blue-600 text-md lg:text-3xl">Shekay
                 Professional
                 Checkout
+                
             </h1>
             </div>
         <div class="container p-12 mx-auto">
@@ -461,8 +472,8 @@ const CheckoutProfessional = () => {
                                             class="w-60"/>
                                     </div> */}
                                     <div>
-                                        <h2 class="text-xl font-bold">Shekay Professional</h2>
-                                        <span class="text-red-600">Price</span> 99.99 Birr
+                                        <h2 class="text-xl font-bold">Shekay Premium</h2>
+                                        <span class="text-red-600">Price</span> 99.99 ETB
                                     </div>
                                     <div>
                                   
@@ -476,11 +487,11 @@ const CheckoutProfessional = () => {
                         </div>
                         <div
                             class="flex items-center w-full py-4 text-sm font-semibold border-b border-gray-300 lg:py-5 lg:px-3 text-heading last:border-b-0 last:text-base last:pb-0">
-                            Subtotal<span class="ml-2">99.99 Birr</span></div>
+                            Subtotal<span class="ml-2">199.99 Birr</span></div>
                      
                         <div
                             class="flex items-center w-full py-4 text-sm font-semibold border-b border-gray-300 lg:py-5 lg:px-3 text-heading last:border-b-0 last:text-base last:pb-0">
-                            Total<span class="ml-2">99.99 Birr</span></div>
+                            Total<span class="ml-2">199.99 Birr</span></div>
                     </div>
                 </div>
             </div>
@@ -490,4 +501,4 @@ const CheckoutProfessional = () => {
     );
 }
 
-export default CheckoutProfessional;
+export default Checkoutpage;

@@ -35,7 +35,9 @@
 		color: #4c00ff;
 	}
   
-
+.bg-white{
+	background-color: white;
+}
   
   .nav{
 	display: flex;
@@ -2611,3 +2613,80 @@ object-fit: contain;
 	overflow: hidden;
 
 }
+
+#submit{
+	position: absolute;
+	top: 0;
+	left: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 0;
+	height: 100%;
+	overflow: hidden;
+	z-index: 400;
+	background-color: white;
+}
+/* 
+input[type="text"]{
+    background-color: white;
+   
+}
+
+
+input[type="email"]{
+    background-color: white;
+   
+}
+
+
+input[type="tel"]{
+    background-color: white;
+	color: black;
+   
+}
+
+input[type="file"]{
+    background-color: white;
+   
+}
+
+input[type="password"]{
+    background-color: white;
+   
+}
+
+
+input[type="date"]{
+    background-color: white;
+   
+}
+
+.text-gray-900{
+	color: rgb(0, 81, 255);
+} */
+
+
+
+@media only screen and (max-width: 600px) {
+	.homebody {
+	  background-color: lightblue;
+	}
+  }
+
+  .color-black{
+	color: black;
+	font-size: 40px;
+  }
+
+  .nav__list-link{
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+  }
+
+  .auto{
+	display: flex;
+	justify-content: center; 
+	
+  }
